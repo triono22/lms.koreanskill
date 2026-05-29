@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - 성문사이버학원{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome Card -->
+<div class="bg-gradient-to-r from-brand-600 via-brand-700 to-purple-700 rounded-2xl p-6 lg:p-8 mb-6 text-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3"></div>
+    <div class="absolute bottom-0 left-1/2 w-48 h-48 bg-white/5 rounded-full translate-y-1/3"></div>
+    <div class="relative z-10">
+        <h1 class="text-2xl lg:text-3xl font-extrabold">안녕하세요, {{ user.username }}! 👋</h1>
+        <p class="text-brand-200 mt-2 text-sm lg:text-base">Selamat datang kembali. Lanjutkan perjalanan belajar bahasa Korea Anda!</p>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <span class="text-2xl font-extrabold text-gray-800">{{ enrollments|length }}</span>
+        </div>
+        <p class="text-xs text-gray-500 font-medium">Kursus Aktif</p>
+    </div>
+    
+    <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex items-center justify-center">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <span class="text-2xl font-extrabold text-gray-800">{{ completed_lessons }}</span>
+        </div>
+        <p class="text-xs text-gray-500 font-medium">Materi Selesai</p>
+    </div>
+    
+    <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <span class="text-2xl font-extrabold text-gray-800">{{ avg_progress }}%</span>
+        </div>
+        <p class="text-xs text-gray-500 font-medium">Rata-rata Progres</p>
+    </div>
+    
+    <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+            <span class="text-2xl font-extrabold text-gray-800">{{ quiz_count }}</span>
+        </div>
+        <p class="text-xs text-gray-500 font-medium">Kuis Dikerjakan</p>
+    </div>
+</div>
+
+<!-- Course Cards -->
+<div class="mb-4">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-gray-800">Kursus Saya</h2>
+
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        {% for enrollment in enrollments %}
+        <div class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all group">
+            <!-- Cover -->
+            {% if enrollment.course.cover_image %}
+            <div class="h-40 overflow-hidden relative">
+                <img src="{{ enrollment.course.cover_image.url }}" alt="{{ enrollment.course.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+            </div>
+            {% else %}
+            <div class="h-40 bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center relative">
+                <i class="fas fa-book text-white/30 text-5xl"></i>
+            </div>
+            {% endif %}
+            
+            <div class="p-5">
+                <h3 class="font-bold text-gray-800 mb-1 group-hover:text-brand-600 transition-colors">{{ enrollment.course.title }}</h3>
+                <p class="text-xs text-gray-400 mb-4">{{ enrollment.course.teacher.username|title }} · {{ enrollment.enrolled_at|date:"d M Y" }}</p>
+                
+                <!-- Progress Bar -->
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-xs font-semibold text-gray-600">Progres Video</span>
+                        <span class="text-xs font-bold {% if enrollment.overall_progress >= 80 %}text-green-600{% elif enrollment.overall_progress >= 50 %}text-amber-600{% else %}text-brand-600{% endif %}">{{ enrollment.overall_progress }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2">
+                        <div class="h-2 rounded-full transition-all duration-500 {% if enrollment.overall_progress >= 80 %}bg-green-500{% elif enrollment.overall_progress >= 50 %}bg-amber-500{% else %}bg-brand-500{% endif %}" style="width: {{ enrollment.overall_progress }}%"></div>
+                    </div>
+                </div>
+                
+                {% if enrollment.first_lesson_id %}
+                <a href="{% url 'lesson-detail' enrollment.first_lesson_id %}" class="block w-full text-center bg-brand-600 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors shadow-sm">
+                    <i class="fas fa-play mr-2 text-xs"></i> Lanjut Belajar
+                </a>
+                {% else %}
+                <button disabled class="block w-full text-center bg-gray-100 text-gray-400 py-2.5 rounded-xl text-sm font-bold cursor-not-allowed">
+                    Belum Ada Materi
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full bg-white p-12 rounded-xl border border-dashed border-gray-300 text-center">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-folder-open text-gray-300 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-700">Belum ada kursus</h3>
+            <p class="text-gray-400 mt-1 text-sm mb-4">Mulai perjalanan belajar bahasa Korea Anda sekarang!</p>
+        <p class="text-gray-500 mt-2 text-sm">Silakan hubungi Admin untuk didaftarkan ke dalam kursus.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

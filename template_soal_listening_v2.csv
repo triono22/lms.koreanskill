@@ -1,0 +1,4 @@
+question_text,option_a,option_b,option_c,option_d,correct_answer,order,audio_file,audio_url,image_file,image_url
+"Dengarkan percakapan berikut. Apa hobi dari pria dalam percakapan tersebut?","Membaca buku","Bermain sepak bola","Mendengarkan musik","Menonton film","C",1,,https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3,,https://picsum.photos/id/1018/600/400
+"Dengarkan klip suara berikut. Dimanakah latar tempat percakapan ini berlangsung?","Di stasiun kereta","Di bandara","Di perpustakaan","Di rumah sakit","A",2,,https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3,,
+"Silakan jawab pertanyaan berikut berdasarkan audio yang Anda dengar.","Opsi Pilihan A","Opsi Pilihan B","Opsi Pilihan C","Opsi Pilihan D","D",3,,,,https://picsum.photos/id/1025/600/400

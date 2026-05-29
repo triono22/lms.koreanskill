@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - 성문사이버학원</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #4338ca 60%, #6366f1 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <!-- Floating shapes for decoration -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="glass-card rounded-3xl shadow-2xl w-full max-w-md p-10 relative z-10">
+        <!-- Logo/Brand -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg bg-white rounded-2xl p-1 transform -rotate-12 group-hover:rotate-0 transition-transform duration-300">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-2xl font-extrabold text-gray-800">성문사이버학원</h1>
+            <p class="text-gray-500 mt-1 text-sm">Korean Language Academy LMS</p>
+        </div>
+
+        <!-- Error Messages -->
+        {% if form.errors or error_message %}
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            {% if error_message %}
+                {{ error_message }}
+            {% else %}
+                Nama pengguna atau sandi salah. Silakan coba lagi.
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="POST" action="{{ app_path }}" id="login-form" class="space-y-5">
+            {% csrf_token %}
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Pengguna (Username)</label>
+                <div class="relative">
+                    <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" name="username" required autofocus autocomplete="username"
+                        class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                        placeholder="Masukkan username admin">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Sandi (Password)</label>
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="password" name="password" required autocomplete="current-password"
+                        class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                        placeholder="Masukkan password admin">
+                </div>
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3.5 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-300/50 flex items-center justify-center gap-2">
+                <i class="fas fa-sign-in-alt"></i> Masuk Admin
+            </button>
+        </form>
+
+        <!-- Support Info -->
+        <div class="text-center mt-8 pt-6 border-t border-gray-200">
+            <p class="text-gray-400 text-xs italic">
+                Kembali ke <a href="{% url 'login' %}" class="text-indigo-600 font-semibold hover:underline">Halaman Login Siswa</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

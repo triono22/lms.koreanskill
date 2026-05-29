@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}성문사이버학원{% endblock %}</title>
+    <meta name="description" content="Platform LMS Bahasa Korea - Belajar bahasa Korea online dengan video, kuis, dan tugas interaktif.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+        /* Prevent video download */
+        video::-internal-media-controls-download-button { display:none; }
+        video::-webkit-media-controls-enclosure { overflow:hidden; }
+        video::-webkit-media-controls-panel { width: calc(100% + 30px); }
+
+        /* Toast animation */
+        @keyframes slideInRight { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
+        @keyframes slideOutRight { from{transform:translateX(0);opacity:1} to{transform:translateX(100%);opacity:0} }
+        .toast-enter { animation: slideInRight 0.4s ease-out; }
+        .toast-exit { animation: slideOutRight 0.4s ease-in forwards; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex h-screen overflow-hidden">
+
+    <!-- Toast Notifications -->
+    {% if messages %}
+    <div id="toastContainer" class="fixed top-4 right-4 z-[100] space-y-3 max-w-sm">
+        {% for message in messages %}
+        <div class="toast-enter flex items-start gap-3 px-5 py-4 rounded-2xl shadow-xl border backdrop-blur-sm
+            {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-800
+            {% elif message.tags == 'warning' %}bg-amber-50 border-amber-200 text-amber-800
+            {% elif message.tags == 'error' %}bg-red-50 border-red-200 text-red-800
+            {% else %}bg-blue-50 border-blue-200 text-blue-800{% endif %}">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% elif message.tags == 'warning' %}fa-exclamation-triangle text-amber-500{% elif message.tags == 'error' %}fa-times-circle text-red-500{% else %}fa-info-circle text-blue-500{% endif %} mt-0.5"></i>
+            <p class="text-sm font-medium flex-1">{{ message }}</p>
+            <button onclick="this.parentElement.classList.replace('toast-enter','toast-exit');setTimeout(()=>this.parentElement.remove(),400)" class="text-gray-400 hover:text-gray-600 ml-2">
+                <i class="fas fa-times text-xs"></i>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('#toastContainer > div').forEach((t, i) => {
+                setTimeout(() => { t.classList.replace('toast-enter','toast-exit'); setTimeout(()=>t.remove(),400); }, 4000 + i * 500);
+            });
+        }, 100);
+    </script>
+    {% endif %}
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden fixed top-0 w-full bg-brand-950 text-white z-50 flex items-center justify-between px-4 py-3 shadow-lg">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 flex items-center justify-center">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="w-full h-full object-contain drop-shadow-sm">
+            </div>
+            <span class="font-bold text-sm">성문사이버학원</span>
+        </div>
+        <button id="mobileMenuBtn" class="focus:outline-none p-2 hover:bg-white/10 rounded-lg transition-colors">
+            <i class="fas fa-bars text-lg"></i>
+        </button>
+    </div>
+
+    <!-- Left Sidebar -->
+    <aside id="sidebar" class="w-64 bg-gradient-to-b from-brand-950 via-brand-900 to-brand-950 text-white flex-shrink-0 flex flex-col fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:static z-40 transition-transform duration-300 ease-in-out shadow-xl">
+        <!-- Logo -->
+        <div class="p-5 flex items-center gap-3 border-b border-white/10">
+            <div class="w-10 h-10 flex items-center justify-center bg-white rounded-full p-1 shadow-md">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <h1 class="font-extrabold text-sm tracking-wide">성문사이버학원</h1>
+                <p class="text-[10px] text-brand-300 -mt-0.5">Korean Language LMS</p>
+            </div>
+        </div>
+
+        <!-- User Profile -->
+        <div class="p-5 border-b border-white/10">
+            <a href="{% url 'profile' %}" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-brand-400 to-purple-400 flex items-center justify-center text-lg font-bold shadow-lg ring-2 ring-white/20">
+                    {% if user.is_authenticated %}{{ user.username|first|upper }}{% else %}<i class="fas fa-user text-sm"></i>{% endif %}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-bold text-sm truncate">{% if user.is_authenticated %}{{ user.username }}{% else %}Tamu{% endif %}</p>
+                    <p class="text-[11px] text-brand-300">{% if user.is_authenticated %}{{ user.get_role_display }}{% else %}Belum login{% endif %}</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto sidebar-scroll py-4 px-3 space-y-1">
+            <p class="text-[10px] uppercase font-bold text-brand-400 tracking-wider px-3 mb-2">Menu Utama</p>
+            
+            <a href="/courses/dashboard/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if request.path == '/courses/dashboard/' %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-home w-5 text-center {% if request.path == '/courses/dashboard/' %}text-brand-300{% endif %}"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <a href="/courses/my-announcements/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if '/announcements/' in request.path %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-bullhorn w-5 text-center"></i>
+                <span>Pengumuman</span>
+            </a>
+
+
+            <p class="text-[10px] uppercase font-bold text-brand-400 tracking-wider px-3 mb-2 mt-6">Akademik</p>
+            
+            <a href="/courses/my-quizzes/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if '/quizzes/' in request.path or '/quiz/' in request.path %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-clipboard-list w-5 text-center"></i>
+                <span>Kuis</span>
+            </a>
+            
+            <a href="/courses/my-exams/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if '/exams/' in request.path or '/exam/' in request.path %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-file-signature w-5 text-center"></i>
+                <span>Ujian</span>
+            </a>
+            
+            <a href="/courses/my-listening/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if '/listening/' in request.path %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-headphones w-5 text-center"></i>
+                <span>Listening</span>
+            </a>
+            
+            <a href="/courses/my-assignments/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if '/assignments/' in request.path or '/assignment/' in request.path %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-file-alt w-5 text-center"></i>
+                <span>Tugas</span>
+            </a>
+            
+            <a href="/courses/my-live-sessions/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if '/live-sessions/' in request.path %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-video w-5 text-center"></i>
+                <span>Live</span>
+            </a>
+            
+            <a href="/courses/my-grades/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if '/grades/' in request.path %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-star w-5 text-center"></i>
+                <span>Nilai</span>
+            </a>
+
+            <p class="text-[10px] uppercase font-bold text-brand-400 tracking-wider px-3 mb-2 mt-6">Akun</p>
+            
+            <a href="{% url 'profile' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {% if '/profile/' in request.path %}bg-white/15 text-white font-semibold shadow-sm{% else %}text-brand-200 hover:bg-white/10 hover:text-white{% endif %}">
+                <i class="fas fa-user-circle w-5 text-center"></i>
+                <span>Profil Saya</span>
+            </a>
+
+            {% if user.is_staff %}
+            <p class="text-[10px] uppercase font-bold text-brand-400 tracking-wider px-3 mb-2 mt-6">Admin</p>
+            <a href="/admin/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-brand-200 hover:bg-white/10 hover:text-white transition-all">
+                <i class="fas fa-cog w-5 text-center"></i>
+                <span>Admin Panel</span>
+            </a>
+            {% endif %}
+        </nav>
+
+        <!-- Bottom Logout -->
+        <div class="p-3 border-t border-white/10">
+            {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-brand-300 hover:bg-red-500/20 hover:text-red-300 transition-all">
+                <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                <span>Keluar</span>
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-brand-300 hover:bg-white/10 hover:text-white transition-all">
+                <i class="fas fa-sign-in-alt w-5 text-center"></i>
+                <span>Masuk</span>
+            </a>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col overflow-hidden lg:mt-0 mt-14">
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden lg:hidden"></div>
+
+        <!-- Top Header Bar -->
+        <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between flex-shrink-0">
+            <div>
+                <h2 class="text-lg font-bold text-gray-800">{% block page_title %}Dashboard{% endblock %}</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                {% if user.is_authenticated %}
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'profile' %}" class="flex items-center gap-2 pl-4 border-l border-gray-200 hover:opacity-80 transition-opacity">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <span class="text-sm font-medium text-gray-700 hidden sm:block">{{ user.username }}</span>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- Main Scrollable Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto p-4 lg:p-6">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,24 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block after_related_objects %}
+{{ block.super }}
+<div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eef2ff, #e0e7ff); border: 2px solid #6366f1; border-radius: 12px;">
+    <h3 style="margin: 0 0 8px 0; color: #312e81; font-size: 16px;">
+        📄 Upload Soal dari CSV
+    </h3>
+    <p style="margin: 0 0 12px 0; color: #4338ca; font-size: 13px;">
+        Import banyak soal sekaligus menggunakan file CSV. Format kolom: <code>question_text, option_a, option_b, option_c, option_d, correct_answer, order</code>
+    </p>
+    {% if original %}
+    <a href="{% url 'admin:courses_quiz_upload_csv' original.pk %}" 
+       style="display: inline-block; padding: 10px 24px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+        <span style="margin-right: 6px;">📤</span> Upload CSV Soal
+    </a>
+    {% else %}
+    <p style="color: #6b7280; font-size: 13px; font-style: italic;">
+        Simpan kuis terlebih dahulu, kemudian tombol upload CSV akan muncul di sini.
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quiz.title }} - 성문사이버학원{% endblock %}
+{% block page_title %}{{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Quiz Header -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center">
+                <i class="fas {% if quiz.quiz_type == 'listening' %}fa-headphones{% else %}fa-clipboard-list{% endif %}"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-extrabold text-gray-800">{{ quiz.title }}</h1>
+                <p class="text-xs text-gray-400">{{ quiz.course.title }} · {{ questions|length }} soal</p>
+            </div>
+        </div>
+        {% if quiz.description %}
+        <p class="text-sm text-gray-600">{{ quiz.description }}</p>
+        {% endif %}
+    </div>
+
+    {% if quiz.audio_file %}
+    <!-- Audio Player for Quiz Level Listening -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+        <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+            <i class="fas fa-volume-up text-brand-600 animate-pulse"></i>
+            <span>Audio Listening Utama</span>
+        </h3>
+        <audio controls class="w-full" controlsList="nodownload">
+            <source src="{{ quiz.audio_file.url }}" type="audio/mpeg">
+            Browser Anda tidak mendukung pemutar audio.
+        </audio>
+    </div>
+    {% endif %}
+
+    {% if already_attempted %}
+    <!-- Already Done -->
+    <div class="max-w-3xl mx-auto bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
+        <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-check-circle text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-green-800 mb-2">{{ quiz.get_quiz_type_display }} Sudah Dikerjakan</h3>
+        <p class="text-green-600 text-sm mb-4">Anda sudah mengerjakan {{ quiz.get_quiz_type_display|lower }} ini sebelumnya.</p>
+        <a href="{% if quiz.quiz_type == 'exam' %}/courses/my-exams/{% elif quiz.quiz_type == 'listening' %}/courses/my-listening/{% else %}/courses/my-quizzes/{% endif %}" class="inline-block bg-green-600 text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition-colors">
+            <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar {{ quiz.get_quiz_type_display }}
+        </a>
+    </div>
+    {% else %}
+    <div class="flex flex-col lg:flex-row gap-6 relative items-start">
+        
+        <!-- Main Content (Form) -->
+        <div class="w-full lg:w-3/4">
+            <!-- Quiz Form -->
+            <form method="POST" action="{% url 'quiz-submit' quiz.pk %}" id="quizForm">
+                {% csrf_token %}
+                
+                {% for question in questions %}
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4 scroll-mt-24" id="question-{{ question.id }}">
+                    <div class="flex items-start gap-3 mb-4">
+                        <span class="flex-shrink-0 w-8 h-8 bg-brand-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">{{ question.order }}</span>
+                        <div class="flex-1">
+                            <p class="text-gray-800 font-medium pt-1">{{ question.question_text }}</p>
+                            {% if question.get_audio_url %}
+                            <!-- Audio Player for Question Level Listening -->
+                            <div class="mt-3">
+                                <audio controls class="w-full max-w-md" controlsList="nodownload">
+                                    <source src="{{ question.get_audio_url }}" type="audio/mpeg">
+                                    Browser Anda tidak mendukung pemutar audio.
+                                </audio>
+                            </div>
+                            {% endif %}
+                            
+                            {% if question.get_image_url %}
+                            <!-- Image for Question -->
+                            <div class="mt-4">
+                                <img src="{{ question.get_image_url }}" alt="Gambar Soal {{ question.order }}" class="max-w-full max-h-[300px] object-contain rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2.5 ml-11">
+                        {% for option_label, option_text in question.get_options %}
+                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-brand-300 hover:bg-brand-50/50 cursor-pointer transition-all group">
+                            <input type="radio" name="question_{{ question.id }}" value="{{ option_label }}" required
+                                class="w-4 h-4 text-brand-600 border-gray-300 focus:ring-brand-500">
+                            <span class="flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-md bg-gray-100 group-hover:bg-brand-100 flex items-center justify-center text-xs font-bold text-gray-500 group-hover:text-brand-600 transition-colors">{{ option_label }}</span>
+                                <span class="text-sm text-gray-700">{{ option_text }}</span>
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="flex justify-between items-center mt-6">
+                    <a href="{% if quiz.quiz_type == 'exam' %}/courses/my-exams/{% elif quiz.quiz_type == 'listening' %}/courses/my-listening/{% else %}/courses/my-quizzes/{% endif %}" class="text-gray-500 hover:text-gray-700 text-sm font-medium">
+                        <i class="fas fa-arrow-left mr-1"></i> Batal
+                    </a>
+                    <button type="submit" class="bg-brand-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-brand-700 transition-colors shadow-sm">
+                        <i class="fas fa-paper-plane mr-2"></i> Kirim Jawaban
+                    </button>
+                </div>
+            </form>
+        </div> <!-- End Main Content -->
+
+        <!-- Right Sidebar (Sticky Timer & Summary) -->
+        <div class="w-full lg:w-1/4 flex flex-col gap-4 sticky top-24 h-fit z-40">
+            
+            {% if quiz.duration_minutes > 0 %}
+            <!-- Timer Box -->
+            <div class="bg-white border-2 border-red-500 rounded-xl shadow-lg p-4 flex items-center gap-4 transition-colors duration-300" id="quizTimerBox">
+                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-lg flex items-center justify-center shrink-0">
+                    <i class="fas fa-clock text-2xl animate-pulse"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Sisa Waktu</p>
+                    <p class="text-2xl font-black text-red-600 tabular-nums leading-none" id="quizTimerDisplay">--:--</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Navigation / Summary Panel -->
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col max-h-[calc(100vh-200px)]">
+                <h3 class="font-bold text-gray-800 mb-3 text-sm text-center border-b pb-2">Ringkasan Jawaban</h3>
+                
+                <div class="grid grid-cols-2 gap-2 overflow-y-auto pr-1 pb-1">
+                    {% for q in questions %}
+                    <button type="button" onclick="document.getElementById('question-{{ q.id }}').scrollIntoView({behavior: 'smooth', block: 'start'})" 
+                            class="flex border border-gray-300 hover:border-brand-500 hover:bg-brand-50 transition-colors focus:outline-none rounded overflow-hidden shadow-sm group">
+                        <div class="w-10 bg-gray-100 text-gray-600 font-bold py-1.5 text-center border-r border-gray-300 text-sm group-hover:bg-brand-100 group-hover:text-brand-600 transition-colors">
+                            {{ q.order }}
+                        </div>
+                        <div class="flex-1 py-1.5 text-center font-bold text-gray-400 bg-white text-sm transition-colors" id="nav-answer-{{ q.id }}">
+                            -
+                        </div>
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            
+        </div> <!-- End Sidebar -->
+        
+    </div> <!-- End flex layout -->
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Update summary on radio change
+        const radioInputs = document.querySelectorAll('input[type="radio"]');
+        radioInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const questionId = this.name.split('_')[1];
+                const selectedValue = this.value;
+                const navCell = document.getElementById(`nav-answer-${questionId}`);
+                if (navCell) {
+                    // Update Text
+                    navCell.innerHTML = selectedValue;
+                    // Update styles for filled state
+                    navCell.classList.add('text-brand-600', 'bg-brand-50');
+                    navCell.classList.remove('text-gray-400', 'bg-white');
+                    navCell.parentElement.classList.add('border-brand-400');
+                    navCell.parentElement.classList.remove('border-gray-300');
+                }
+            });
+        });
+    });
+
+    {% if quiz.duration_minutes > 0 and not already_attempted %}
+    document.addEventListener("DOMContentLoaded", function() {
+        const durationMinutes = parseInt("{{ quiz.duration_minutes }}");
+        const quizId = "{{ quiz.id }}";
+        const storageKey = `quiz_end_time_${quizId}`;
+        
+        let endTime = sessionStorage.getItem(storageKey);
+        
+        if (!endTime) {
+            // First time opening the quiz
+            const now = new Date().getTime();
+            endTime = now + (durationMinutes * 60 * 1000);
+            sessionStorage.setItem(storageKey, endTime);
+        }
+        
+        const display = document.getElementById('quizTimerDisplay');
+        const timerBox = document.getElementById('quizTimerBox');
+        const form = document.getElementById('quizForm');
+        
+        // Clear session storage if manually submitted
+        form.addEventListener('submit', function() {
+            sessionStorage.removeItem(storageKey);
+        });
+        
+        const timerInterval = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+            
+            if (distance <= 0) {
+                clearInterval(timerInterval);
+                display.innerHTML = "00:00";
+                sessionStorage.removeItem(storageKey);
+                
+                // Visual feedback
+                timerBox.classList.remove('border-red-500');
+                timerBox.classList.add('border-gray-500', 'bg-gray-100', 'opacity-80');
+                
+                alert("⏳ Waktu pengerjaan telah habis!\nJawaban Anda akan dikirim secara otomatis.");
+                form.submit();
+                return;
+            }
+            
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            display.innerHTML = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+            
+            // Visual warning when time is low (< 1 minute)
+            if (minutes < 1 && !timerBox.classList.contains('bg-red-50')) {
+                timerBox.classList.add('bg-red-50');
+                timerBox.querySelector('.fa-clock').classList.add('text-red-700');
+            }
+            
+        }, 1000);
+    });
+    {% endif %}
+
+    // Keep-alive ping to prevent auto-logout while taking the quiz
+    setInterval(function() {
+        fetch(window.location.href, { method: 'HEAD' }).catch(() => {});
+    }, 5 * 60 * 1000); // Ping setiap 5 menit
+</script>
+{% endblock %}

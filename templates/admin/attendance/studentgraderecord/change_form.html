@@ -1,0 +1,217 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrahead %}{{ block.super }}
+<style>
+    .rekap-container {
+        font-family: Arial, sans-serif;
+    }
+    .course-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .course-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #ddd;
+    }
+    .course-title {
+        margin: 0;
+        font-size: 1.25rem;
+        color: #333;
+    }
+    .course-body {
+        padding: 20px;
+    }
+    .grade-section {
+        margin-bottom: 20px;
+    }
+    .grade-section:last-child {
+        margin-bottom: 0;
+    }
+    .grade-section-title {
+        font-size: 1rem;
+        color: #444;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 5px;
+    }
+    .grade-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+    .grade-table th, .grade-table td {
+        padding: 10px;
+        border: 1px solid #eee;
+        text-align: left;
+    }
+    .grade-table th {
+        background-color: #f9f9f9;
+        font-weight: 600;
+        color: #555;
+    }
+    .grade-table tr:hover {
+        background-color: #f5f5f5;
+    }
+    .text-center { text-align: center !important; }
+    .text-right { text-align: right !important; }
+    .score-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .score-excellent { background-color: #d4edda; color: #155724; }
+    .score-good { background-color: #fff3cd; color: #856404; }
+    .score-poor { background-color: #f8d7da; color: #721c24; }
+    .empty-state {
+        color: #777;
+        font-style: italic;
+        padding: 10px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="rekap-container">
+        <h2 style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+            Profil Akademik: {{ student.get_full_name|default:student.username }}
+            <span style="font-size: 0.6em; color: #777; font-weight: normal; margin-left: 10px;">{{ student.email }}</span>
+        </h2>
+
+        {% if not courses_data %}
+            <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffeeba; color: #856404; border-radius: 5px;">
+                Siswa ini belum terdaftar di kursus apa pun atau tidak ada kursus aktif.
+            </div>
+        {% endif %}
+
+        {% for data in courses_data %}
+        <div class="course-card">
+            <div class="course-header">
+                <h3 class="course-title"><i class="fas fa-book"></i> {{ data.course.title }}</h3>
+            </div>
+            <div class="course-body">
+                
+                <!-- Kuis -->
+                <div class="grade-section">
+                    <h4 class="grade-section-title">Hasil Kuis</h4>
+                    {% if data.quizzes %}
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>Judul Kuis</th>
+                                <th class="text-center w-32">Total Soal</th>
+                                <th class="text-center w-32">Nilai</th>
+                                <th class="text-right">Tanggal Mengerjakan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attempt in data.quizzes %}
+                            <tr>
+                                <td>{{ attempt.quiz.title }}</td>
+                                <td class="text-center">{{ attempt.total_questions }}</td>
+                                <td class="text-center">
+                                    <span class="score-badge 
+                                        {% if attempt.score >= 80 %}score-excellent
+                                        {% elif attempt.score >= 60 %}score-good
+                                        {% else %}score-poor{% endif %}">
+                                        {{ attempt.score }}
+                                    </span>
+                                </td>
+                                <td class="text-right">{{ attempt.submitted_at|date:"d M Y, H:i" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="empty-state">Belum ada data kuis yang dikerjakan.</div>
+                    {% endif %}
+                </div>
+
+                <!-- Ujian -->
+                <div class="grade-section">
+                    <h4 class="grade-section-title">Hasil Ujian</h4>
+                    {% if data.exams %}
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>Judul Ujian</th>
+                                <th class="text-center w-32">Total Soal</th>
+                                <th class="text-center w-32">Nilai</th>
+                                <th class="text-right">Tanggal Mengerjakan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attempt in data.exams %}
+                            <tr>
+                                <td>{{ attempt.quiz.title }}</td>
+                                <td class="text-center">{{ attempt.total_questions }}</td>
+                                <td class="text-center">
+                                    <span class="score-badge 
+                                        {% if attempt.score >= 80 %}score-excellent
+                                        {% elif attempt.score >= 60 %}score-good
+                                        {% else %}score-poor{% endif %}">
+                                        {{ attempt.score }}
+                                    </span>
+                                </td>
+                                <td class="text-right">{{ attempt.submitted_at|date:"d M Y, H:i" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="empty-state">Belum ada data ujian yang dikerjakan.</div>
+                    {% endif %}
+                </div>
+
+                <!-- Tugas -->
+                <div class="grade-section">
+                    <h4 class="grade-section-title">Pengumpulan Tugas</h4>
+                    {% if data.assignments %}
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>Judul Tugas</th>
+                                <th>Status Nilai</th>
+                                <th class="text-right">Tanggal Mengumpulkan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sub in data.assignments %}
+                            <tr>
+                                <td>{{ sub.assignment.title }}</td>
+                                <td>
+                                    {% if sub.grade is not None %}
+                                        <span class="score-badge 
+                                            {% if sub.grade >= 80 %}score-excellent
+                                            {% elif sub.grade >= 60 %}score-good
+                                            {% else %}score-poor{% endif %}">
+                                            {{ sub.grade }}
+                                        </span>
+                                    {% else %}
+                                        <span style="color: #856404; background: #fff3cd; padding: 3px 6px; border-radius: 4px; font-size: 0.9em;">Belum Dinilai</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-right">{{ sub.submitted_at|date:"d M Y, H:i" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="empty-state">Belum ada tugas yang dikumpulkan.</div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

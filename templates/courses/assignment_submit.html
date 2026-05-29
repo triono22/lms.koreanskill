@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block title %}{{ assignment.title }} - 성문사이버학원{% endblock %}
+{% block page_title %}Kumpulkan Tugas{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Assignment Info -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-extrabold text-gray-800">{{ assignment.title }}</h1>
+                <p class="text-xs text-gray-400">{{ assignment.course.title }}</p>
+            </div>
+        </div>
+        
+        {% if assignment.description %}
+        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+            <h3 class="text-sm font-bold text-gray-700 mb-2"><i class="fas fa-info-circle mr-1"></i> Instruksi</h3>
+            <p class="text-sm text-gray-600">{{ assignment.description }}</p>
+        </div>
+        {% endif %}
+        
+        {% if assignment.deadline %}
+        <p class="text-sm text-gray-500">
+            <i class="fas fa-clock mr-1.5 text-amber-500"></i> Batas Waktu: <strong>{{ assignment.deadline|date:"d M Y, H:i" }}</strong>
+        </p>
+        {% endif %}
+
+        {% if assignment.attachment %}
+        <a href="{{ assignment.attachment.url }}" download class="inline-flex items-center gap-2 mt-4 bg-brand-50 text-brand-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-brand-100 transition-colors border border-brand-200">
+            <i class="fas fa-download"></i> Download File Soal
+        </a>
+        {% endif %}
+    </div>
+
+    {% if submission %}
+    <!-- Already Submitted -->
+    <div class="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
+        <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-check-circle text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-green-800 mb-2">Tugas Sudah Dikumpulkan</h3>
+        <p class="text-green-600 text-sm mb-5">Dikirim pada: {{ submission.submitted_at|date:"d M Y, H:i" }}</p>
+
+        <!-- Submitted Answers Display -->
+        <div class="bg-white rounded-xl p-5 text-left border border-green-200 shadow-sm space-y-4 mb-6">
+            <h4 class="text-sm font-extrabold text-gray-800 border-b border-gray-100 pb-2 mb-3">
+                <i class="fas fa-reply mr-1.5 text-brand-600"></i> Jawaban Anda
+            </h4>
+            
+            {% if submission.file %}
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-brand-100 text-brand-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-800">File Dokumen</p>
+                        <p class="text-[10px] text-gray-400">Telah terunggah</p>
+                    </div>
+                </div>
+                <a href="{{ submission.file.url }}" download class="bg-brand-50 hover:bg-brand-100 text-brand-700 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">
+                    <i class="fas fa-download mr-1"></i> Download
+                </a>
+            </div>
+            {% endif %}
+
+            {% if submission.audio_file %}
+            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-9 h-9 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-800">File Audio</p>
+                        <p class="text-[10px] text-gray-400">Putar langsung jawaban Anda</p>
+                    </div>
+                </div>
+                <audio controls class="w-full h-8 mt-1" controlsList="nodownload">
+                    <source src="{{ submission.audio_file.url }}" type="audio/mpeg">
+                    Browser Anda tidak mendukung pemutaran audio.
+                </audio>
+            </div>
+            {% endif %}
+
+            {% if submission.link_url %}
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <div class="flex items-center gap-3 overflow-hidden mr-3">
+                    <div class="w-9 h-9 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center shrink-0">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-gray-800">Tautan Link</p>
+                        <a href="{{ submission.link_url }}" target="_blank" class="text-[10px] text-brand-600 font-semibold hover:underline block truncate">{{ submission.link_url }}</a>
+                    </div>
+                </div>
+                <a href="{{ submission.link_url }}" target="_blank" class="bg-amber-50 hover:bg-amber-100 text-amber-700 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0">
+                    <i class="fas fa-external-link-alt mr-1"></i> Buka Link
+                </a>
+            </div>
+            {% endif %}
+
+            {% if submission.notes %}
+            <div class="pt-2 border-t border-gray-100">
+                <p class="text-xs font-bold text-gray-700 mb-1"><i class="fas fa-sticky-note mr-1 text-gray-400"></i> Catatan:</p>
+                <p class="text-xs text-gray-600 leading-relaxed bg-gray-50 p-2.5 rounded-lg border border-gray-100">{{ submission.notes }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if submission.grade is not None %}
+        <p class="text-green-700 font-extrabold text-xl mt-3">Nilai: {{ submission.grade }}/100</p>
+        {% endif %}
+        
+        {% if submission.feedback %}
+        <div class="mt-4 bg-white rounded-xl p-4 text-left border border-green-200 shadow-sm">
+            <p class="text-xs font-bold text-gray-700 mb-1"><i class="fas fa-comment mr-1 text-green-600"></i> Feedback:</p>
+            <p class="text-xs text-gray-600">{{ submission.feedback }}</p>
+        </div>
+        {% endif %}
+        
+        <a href="{% url 'assignment-list' %}" class="inline-block mt-5 bg-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-green-700 transition-colors shadow-sm">
+            <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar Tugas
+        </a>
+    </div>
+    {% else %}
+    <!-- Upload Form -->
+    <form method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-6" id="assignmentForm" onsubmit="return validateSubmissionForm()">
+        {% csrf_token %}
+        
+        <!-- File Document Dropzone -->
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-1.5">
+                <i class="fas fa-file-alt text-brand-600"></i>
+                <span>Upload File Dokumen (Opsional)</span>
+            </label>
+            <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-brand-400 transition-colors cursor-pointer relative" id="dropZone">
+                <input type="file" name="file" id="fileInput" class="hidden" onchange="updateFileName(this)">
+                <label for="fileInput" class="cursor-pointer block">
+                    <div class="w-10 h-10 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-cloud-upload-alt text-lg"></i>
+                    </div>
+                    <p class="text-xs text-gray-600 font-bold" id="fileLabel">Klik atau seret file dokumen ke sini</p>
+                    <p class="text-[10px] text-gray-400 mt-1">PDF, DOCX, ZIP, JPG (maks 50MB)</p>
+                </label>
+            </div>
+        </div>
+
+        <!-- Audio Upload Section -->
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-1.5">
+                <i class="fas fa-volume-up text-blue-600"></i>
+                <span>Upload File Audio Rekaman (Opsional)</span>
+            </label>
+            <div class="border-2 border-dashed border-blue-200 rounded-xl p-6 text-center hover:border-blue-400 transition-colors cursor-pointer relative bg-blue-50/20" id="audioDropZone">
+                <input type="file" name="audio_file" id="audioInput" accept="audio/*" class="hidden" onchange="updateAudioFileName(this)">
+                <label for="audioInput" class="cursor-pointer block">
+                    <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-microphone text-lg"></i>
+                    </div>
+                    <p class="text-xs text-gray-600 font-bold" id="audioLabel">Klik atau seret file audio ke sini</p>
+                    <p class="text-[10px] text-gray-400 mt-1">MP3, WAV, M4A, WEBM (maks 50MB)</p>
+                </label>
+            </div>
+        </div>
+
+        <!-- Link URL Section -->
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-1.5">
+                <i class="fas fa-link text-amber-600"></i>
+                <span>Tautan / Link URL Jawaban (Opsional)</span>
+            </label>
+            <div class="relative rounded-xl shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-link text-gray-400 text-xs"></i>
+                </div>
+                <input type="url" name="link_url" id="linkInput" placeholder="https://example.com/share-link"
+                    class="w-full pl-9 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none text-xs" oninput="checkFormInputs()">
+            </div>
+            <p class="text-[10px] text-gray-400 mt-1">Gunakan ini jika tugas diunggah ke Google Drive, GitHub, atau platform online lainnya.</p>
+        </div>
+        
+        <!-- Notes Section -->
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Catatan Tambahan (Opsional)</label>
+            <textarea name="notes" rows="2" placeholder="Tambahkan catatan singkat untuk pengajar jika diperlukan..."
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none text-xs resize-none"></textarea>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+            <a href="{% url 'assignment-list' %}" class="text-gray-500 hover:text-gray-700 text-xs font-bold flex items-center gap-1">
+                <i class="fas fa-arrow-left"></i> Batal
+            </a>
+            
+            <div class="flex items-center gap-3">
+                <span id="warningMsg" class="text-[11px] text-rose-500 font-bold hidden animate-pulse">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> Harap isi minimal salah satu jawaban!
+                </span>
+                
+                <button type="submit" id="submitBtn" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 opacity-60 cursor-not-allowed" disabled>
+                    <i class="fas fa-paper-plane"></i> Kirim Tugas
+                </button>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function updateFileName(input) {
+        const label = document.getElementById('fileLabel');
+        if (input.files.length > 0) {
+            label.textContent = "📄 " + input.files[0].name;
+            label.classList.add('text-brand-600', 'font-extrabold');
+        } else {
+            label.textContent = "Klik atau seret file dokumen ke sini";
+            label.classList.remove('text-brand-600', 'font-extrabold');
+        }
+        checkFormInputs();
+    }
+
+    function updateAudioFileName(input) {
+        const label = document.getElementById('audioLabel');
+        if (input.files.length > 0) {
+            label.textContent = "🎵 " + input.files[0].name;
+            label.classList.add('text-blue-600', 'font-extrabold');
+        } else {
+            label.textContent = "Klik atau seret file audio ke sini";
+            label.classList.remove('text-blue-600', 'font-extrabold');
+        }
+        checkFormInputs();
+    }
+
+    function checkFormInputs() {
+        const fileInput = document.getElementById('fileInput');
+        const audioInput = document.getElementById('audioInput');
+        const linkInput = document.getElementById('linkInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const warningMsg = document.getElementById('warningMsg');
+
+        const hasFile = fileInput && fileInput.files.length > 0;
+        const hasAudio = audioInput && audioInput.files.length > 0;
+        const hasLink = linkInput && linkInput.value.trim() !== "";
+
+        if (hasFile || hasAudio || hasLink) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            submitBtn.classList.add('hover:scale-[1.02]');
+            warningMsg.classList.add('hidden');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            submitBtn.classList.remove('hover:scale-[1.02]');
+        }
+    }
+
+    function validateSubmissionForm() {
+        const fileInput = document.getElementById('fileInput');
+        const audioInput = document.getElementById('audioInput');
+        const linkInput = document.getElementById('linkInput');
+        const warningMsg = document.getElementById('warningMsg');
+
+        const hasFile = fileInput && fileInput.files.length > 0;
+        const hasAudio = audioInput && audioInput.files.length > 0;
+        const hasLink = linkInput && linkInput.value.trim() !== "";
+
+        if (!hasFile && !hasAudio && !hasLink) {
+            warningMsg.classList.remove('hidden');
+            return false;
+        }
+        return true;
+    }
+
+    // Run once on load to ensure proper button state
+    document.addEventListener("DOMContentLoaded", function() {
+        checkFormInputs();
+    });
+</script>
+{% endblock %}

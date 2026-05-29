@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} - 성문사이버학원{% endblock %}
+{% block page_title %}Detail Kursus{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Course Header -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-6">
+        {% if course.cover_image %}
+        <div class="h-56 lg:h-72 overflow-hidden relative">
+            <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 right-6">
+                <h1 class="text-2xl lg:text-3xl font-extrabold text-white">{{ course.title }}</h1>
+            </div>
+        </div>
+        {% else %}
+        <div class="h-56 lg:h-72 bg-gradient-to-br from-brand-600 via-brand-700 to-purple-700 flex items-center justify-center relative">
+            <i class="fas fa-language text-white/10 text-8xl"></i>
+            <div class="absolute bottom-6 left-6 right-6">
+                <h1 class="text-2xl lg:text-3xl font-extrabold text-white">{{ course.title }}</h1>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="p-6">
+            <!-- Teacher & Stats -->
+            <div class="flex flex-wrap items-center gap-6 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold">{{ course.teacher.username|first|upper }}</div>
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">{{ course.teacher.username }}</p>
+                        <p class="text-xs text-gray-400">Pengajar</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6 text-sm text-gray-500">
+                    <span><i class="fas fa-book-open mr-1.5 text-brand-500"></i>{{ lessons|length }} Materi</span>
+                    <span><i class="fas fa-clock mr-1.5 text-brand-500"></i>{{ total_duration }}</span>
+                    <span><i class="fas fa-clipboard-list mr-1.5 text-brand-500"></i>{{ quiz_count }} Kuis</span>
+                    <span><i class="fas fa-file-alt mr-1.5 text-brand-500"></i>{{ assignment_count }} Tugas</span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            {% if course.description %}
+            <div class="mb-6">
+                <h3 class="font-bold text-gray-800 mb-2">Deskripsi Kursus</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">{{ course.description }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Enroll Button -->
+            {% if is_enrolled %}
+            <a href="{% url 'student-dashboard' %}" class="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-sm">
+                <i class="fas fa-check-circle"></i> Sudah Terdaftar — Buka Dashboard
+            </a>
+            {% else %}
+            <form action="{% url 'enroll-action' course.id %}" method="POST" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="inline-flex items-center gap-2 bg-brand-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-brand-700 transition-colors shadow-lg hover:shadow-xl">
+                    <i class="fas fa-plus-circle"></i> Daftar Kursus Ini
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Lesson List Preview -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="p-5 bg-brand-600 text-white flex items-center justify-between">
+            <h3 class="font-bold text-sm"><i class="fas fa-list-ul mr-2"></i>Daftar Materi</h3>
+            <span class="text-white/70 text-xs">{{ lessons|length }} materi</span>
+        </div>
+        <div class="divide-y divide-gray-50">
+            {% for lesson in lessons %}
+            <div class="p-4 flex items-center gap-4 hover:bg-gray-50 transition-colors">
+                <div class="w-9 h-9 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center flex-shrink-0 text-sm font-bold">{{ lesson.order }}</div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-700 truncate">{{ lesson.title }}</p>
+                    <p class="text-xs text-gray-400">
+                        <i class="fas fa-clock mr-1"></i>{{ lesson.total_duration|default:0 }}s
+                        {% if lesson.attachment %}<span class="ml-2"><i class="fas fa-paperclip mr-1"></i>Dokumen</span>{% endif %}
+                    </p>
+                </div>
+                {% if is_enrolled %}
+                <a href="{% url 'lesson-detail' lesson.id %}" class="text-brand-600 hover:text-brand-800 text-xs font-bold">
+                    <i class="fas fa-play-circle mr-1"></i>Buka
+                </a>
+                {% else %}
+                <span class="text-gray-300 text-xs"><i class="fas fa-lock"></i></span>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="p-8 text-center text-gray-400">
+                <i class="fas fa-inbox text-2xl mb-2"></i>
+                <p class="text-sm">Belum ada materi.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

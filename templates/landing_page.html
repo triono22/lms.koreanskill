@@ -1,0 +1,344 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성문사이버학원 - Platform Belajar Bahasa Korea Online</title>
+    <meta name="description" content="Belajar bahasa Korea online dengan video interaktif, kuis, dan tugas. Platform LMS terbaik untuk menguasai bahasa Korea.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81',950:'#1e1b4b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .hero-gradient { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #4338ca 50%, #6366f1 75%, #818cf8 100%); }
+        .float-animation { animation: float 6s ease-in-out infinite; }
+        .float-delay { animation: float 6s ease-in-out 2s infinite; }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+        .fade-delay-1 { animation-delay: 0.2s; opacity: 0; }
+        .fade-delay-2 { animation-delay: 0.4s; opacity: 0; }
+        .fade-delay-3 { animation-delay: 0.6s; opacity: 0; }
+        .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 flex items-center justify-center bg-white rounded-full p-1 shadow-md">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-white text-sm leading-tight">성문사이버학원</h1>
+                    <p class="text-[10px] text-white/60">Korean Language Academy</p>
+                </div>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-white/80 hover:text-white text-sm font-medium transition-colors">Fitur</a>
+                <a href="#courses" class="text-white/80 hover:text-white text-sm font-medium transition-colors">Kursus</a>
+                <a href="#stats" class="text-white/80 hover:text-white text-sm font-medium transition-colors">Statistik</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/accounts/login/" class="text-white/90 hover:text-white text-sm font-semibold transition-colors px-4 py-2">Masuk</a>
+                <a href="https://koreanskill.my.id" class="bg-white text-brand-700 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-50 transition-all shadow-lg hover:shadow-xl">Daftar Gratis</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient min-h-screen flex items-center relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl float-animation"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-indigo-400/15 rounded-full blur-3xl float-delay"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 pt-24 pb-16 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6 fade-in-up">
+                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                        <span class="text-white/80 text-xs font-medium">Platform Pembelajaran Online</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-6 fade-in-up fade-delay-1">
+                        Kuasai<br>
+                        <span class="bg-gradient-to-r from-brand-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">Bahasa Korea</span><br>
+                        dengan Mudah
+                    </h1>
+                    <p class="text-lg text-white/70 mb-8 max-w-lg fade-in-up fade-delay-2">
+                        Belajar bahasa Korea melalui video interaktif, kuis menarik, dan tugas praktis. Pantau progres belajar Anda secara real-time.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 fade-in-up fade-delay-3">
+                        <a href="https://koreanskill.my.id" class="bg-white text-brand-700 px-8 py-4 rounded-2xl font-bold text-center hover:bg-brand-50 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                            <i class="fas fa-rocket"></i> Mulai Belajar — Gratis
+                        </a>
+                        <a href="#features" class="glass text-white px-8 py-4 rounded-2xl font-bold text-center hover:bg-white/15 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-play-circle"></i> Lihat Fitur
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden lg:block relative">
+                    <div class="glass rounded-3xl p-8 float-animation">
+                        <div class="text-center space-y-6">
+                            <div class="text-8xl">🇰🇷</div>
+                            <div class="space-y-3">
+                                <div class="glass rounded-2xl p-4 text-left">
+                                    <p class="text-white/60 text-xs mb-1">Pelajaran Hari Ini</p>
+                                    <p class="text-white font-bold text-lg">안녕하세요!</p>
+                                    <p class="text-white/70 text-sm">Annyeonghaseyo — Halo!</p>
+                                </div>
+                                <div class="glass rounded-2xl p-4 text-left">
+                                    <p class="text-white/60 text-xs mb-1">Kosakata Baru</p>
+                                    <p class="text-white font-bold text-lg">감사합니다</p>
+                                    <p class="text-white/70 text-sm">Gamsahamnida — Terima kasih</p>
+                                </div>
+                                <div class="glass rounded-2xl p-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-white/70 text-sm">Progress Mingguan</span>
+                                        <span class="text-white font-bold">78%</span>
+                                    </div>
+                                    <div class="w-full bg-white/10 rounded-full h-2 mt-2">
+                                        <div class="bg-gradient-to-r from-green-400 to-emerald-400 h-2 rounded-full" style="width:78%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 120" fill="none"><path d="M0,64L60,58.7C120,53,240,43,360,48C480,53,600,75,720,80C840,85,960,75,1080,64C1200,53,1320,43,1380,37.3L1440,32L1440,120L0,120Z" fill="#f9fafb"/></svg>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-brand-600 font-bold text-sm uppercase tracking-wider">Fitur Unggulan</span>
+                <h2 class="text-3xl lg:text-4xl font-black text-gray-900 mt-3">Semua yang Anda Butuhkan<br>untuk Belajar Bahasa Korea</h2>
+                <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Platform LMS lengkap dengan berbagai fitur modern untuk pengalaman belajar yang optimal</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-play-circle text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Video Interaktif</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Tonton video pelajaran dengan tracking otomatis. Lanjutkan dari posisi terakhir kapan saja.</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-clipboard-list text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Kuis & Ujian</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Uji pemahaman Anda dengan kuis pilihan ganda. Lihat hasil dan pembahasan secara instan.</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-file-upload text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Tugas & Penilaian</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Kumpulkan tugas secara online dan terima feedback langsung dari pengajar.</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+                    <div class="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-chart-line text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Tracking Progress</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Pantau kemajuan belajar secara real-time dengan dashboard visual yang informatif.</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+                    <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-mobile-alt text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Responsif & Mobile</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Akses platform dari perangkat apapun — laptop, tablet, atau smartphone.</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+                    <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-shield-alt text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Aman & Terlindungi</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Video dilindungi dari download ilegal. Data Anda aman dengan enkripsi modern.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="stats" class="py-20 hero-gradient relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute top-10 right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl lg:text-5xl font-black text-white mb-2" id="statCourses">{{ total_courses }}</div>
+                    <p class="text-white/60 text-sm font-medium">Kursus Tersedia</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl lg:text-5xl font-black text-white mb-2">{{ total_students }}</div>
+                    <p class="text-white/60 text-sm font-medium">Siswa Terdaftar</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl lg:text-5xl font-black text-white mb-2">{{ total_lessons }}</div>
+                    <p class="text-white/60 text-sm font-medium">Video Materi</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl lg:text-5xl font-black text-white mb-2">{{ total_quizzes }}</div>
+                    <p class="text-white/60 text-sm font-medium">Kuis Tersedia</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Preview -->
+    <section id="courses" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-brand-600 font-bold text-sm uppercase tracking-wider">Kursus Populer</span>
+                <h2 class="text-3xl lg:text-4xl font-black text-gray-900 mt-3">Mulai Perjalanan Bahasa Korea Anda</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for course in courses %}
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+                    {% if course.cover_image %}
+                    <div class="h-48 overflow-hidden">
+                        <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    {% else %}
+                    <div class="h-48 bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-language text-white/20 text-6xl"></i>
+                    </div>
+                    {% endif %}
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-brand-600 transition-colors">{{ course.title }}</h3>
+                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">{{ course.description }}</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 text-xs font-bold">{{ course.teacher.username|first|upper }}</div>
+                                <span class="text-xs text-gray-500">{{ course.teacher.username }}</span>
+                            </div>
+                            <span class="text-xs text-gray-400"><i class="fas fa-book-open mr-1"></i>{{ course.lessons.count }} materi</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-12">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-book text-gray-300 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-500">Kursus akan segera tersedia.</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-12">
+                <a href="https://koreanskill.my.id" class="inline-flex items-center gap-2 bg-brand-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-brand-700 transition-all shadow-lg hover:shadow-xl">
+                    <i class="fas fa-arrow-right"></i> Daftar untuk Lihat Semua Kursus
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="bg-gradient-to-r from-brand-600 via-brand-700 to-purple-700 rounded-3xl p-12 lg:p-16 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3"></div>
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/3"></div>
+                <div class="relative z-10">
+                    <h2 class="text-3xl lg:text-4xl font-black text-white mb-4">Siap Belajar Bahasa Korea?</h2>
+                    <p class="text-brand-200 mb-8 max-w-xl mx-auto">Bergabung sekarang dan mulai perjalanan Anda menguasai bahasa Korea dengan metode pembelajaran yang efektif.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="https://koreanskill.my.id" class="bg-white text-brand-700 px-8 py-4 rounded-2xl font-bold hover:bg-brand-50 transition-all shadow-xl flex items-center justify-center gap-2">
+                            <i class="fas fa-user-plus"></i> Daftar Sekarang
+                        </a>
+                        <a href="/accounts/login/" class="border-2 border-white/30 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-sign-in-alt"></i> Sudah Punya Akun
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-950 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 flex items-center justify-center bg-white rounded-full p-1 shadow-md">
+                            <img src="{% static 'images/logo.png' %}" alt="Logo" class="w-full h-full object-contain">
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-sm">성문사이버학원</h3>
+                            <p class="text-[10px] text-brand-400">Korean Language Academy</p>
+                        </div>
+                    </div>
+                    <p class="text-brand-300 text-sm leading-relaxed">Platform belajar bahasa Korea online dengan metode interaktif dan tracking progress real-time.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Menu</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-brand-300 hover:text-white text-sm transition-colors">Fitur</a></li>
+                        <li><a href="#courses" class="text-brand-300 hover:text-white text-sm transition-colors">Kursus</a></li>
+                        <li><a href="https://koreanskill.my.id" class="text-brand-300 hover:text-white text-sm transition-colors">Daftar</a></li>
+                        <li><a href="/accounts/login/" class="text-brand-300 hover:text-white text-sm transition-colors">Masuk</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Kontak</h4>
+                    <ul class="space-y-2">
+                        <li class="text-brand-300 text-sm"><i class="fas fa-globe mr-2 text-brand-500"></i>lms.koreanskill.com</li>
+                        <li class="text-brand-300 text-sm"><i class="fas fa-envelope mr-2 text-brand-500"></i>info@koreanskill.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 text-center">
+                <p class="text-brand-400 text-xs">&copy; 2026 성문사이버학원 — Korean Skill. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-brand-950/95', 'backdrop-blur-lg', 'shadow-lg');
+            } else {
+                nav.classList.remove('bg-brand-950/95', 'backdrop-blur-lg', 'shadow-lg');
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

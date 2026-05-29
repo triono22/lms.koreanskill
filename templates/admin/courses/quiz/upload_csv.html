@@ -1,0 +1,114 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #312e81, #4338ca); color: white; padding: 30px; border-radius: 16px; margin-bottom: 24px;">
+        <h1 style="margin: 0 0 8px 0; font-size: 22px;">📄 Upload Soal dari CSV</h1>
+        <p style="margin: 0; opacity: 0.8; font-size: 14px;">Kuis: <strong>{{ quiz.title }}</strong> — {{ quiz.course.title }}</p>
+    </div>
+
+    <!-- Format Guide -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+        <h3 style="margin: 0 0 12px 0; color: #1e293b; font-size: 15px;">📋 Format CSV yang Dibutuhkan</h3>
+        <p style="margin: 0 0 12px 0; color: #64748b; font-size: 13px;">
+            File CSV harus memiliki kolom berikut (header di baris pertama):
+        </p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+                <tr style="background: #e2e8f0;">
+                    <th style="padding: 8px 12px; text-align: left; border-radius: 6px 0 0 0;">Kolom</th>
+                    <th style="padding: 8px 12px; text-align: left;">Wajib</th>
+                    <th style="padding: 8px 12px; text-align: left; border-radius: 0 6px 0 0;">Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px 12px;"><code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">question_text</code></td>
+                    <td style="padding: 8px 12px;">✅ Ya</td>
+                    <td style="padding: 8px 12px; color: #64748b;">Teks pertanyaan</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px 12px;"><code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">option_a</code></td>
+                    <td style="padding: 8px 12px;">✅ Ya</td>
+                    <td style="padding: 8px 12px; color: #64748b;">Opsi jawaban A</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px 12px;"><code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">option_b</code></td>
+                    <td style="padding: 8px 12px;">✅ Ya</td>
+                    <td style="padding: 8px 12px; color: #64748b;">Opsi jawaban B</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px 12px;"><code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">option_c</code></td>
+                    <td style="padding: 8px 12px;">✅ Ya</td>
+                    <td style="padding: 8px 12px; color: #64748b;">Opsi jawaban C</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px 12px;"><code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">option_d</code></td>
+                    <td style="padding: 8px 12px;">✅ Ya</td>
+                    <td style="padding: 8px 12px; color: #64748b;">Opsi jawaban D</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px 12px;"><code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">correct_answer</code></td>
+                    <td style="padding: 8px 12px;">✅ Ya</td>
+                    <td style="padding: 8px 12px; color: #64748b;">Jawaban benar: <strong>A</strong>, <strong>B</strong>, <strong>C</strong>, atau <strong>D</strong></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 12px;"><code style="background: #fef3c7; padding: 2px 6px; border-radius: 4px;">order</code></td>
+                    <td style="padding: 8px 12px;">❌ Opsional</td>
+                    <td style="padding: 8px 12px; color: #64748b;">Nomor urut soal (otomatis jika kosong)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Example -->
+        <h4 style="margin: 16px 0 8px 0; color: #1e293b; font-size: 14px;">Contoh isi CSV:</h4>
+        <div style="background: #1e293b; color: #a5f3fc; padding: 14px; border-radius: 8px; font-family: monospace; font-size: 12px; overflow-x: auto; line-height: 1.8;">
+            question_text,option_a,option_b,option_c,option_d,correct_answer,order<br>
+            Apa arti 안녕하세요?,Selamat tinggal,Selamat pagi/siang/malam,Terima kasih,Maaf,B,1<br>
+            Huruf Korea disebut?,Kanji,Hiragana,Hangul,Romaji,C,2<br>
+            감사합니다 artinya?,Maaf,Tolong,Permisi,Terima kasih,D,3
+        </div>
+    </div>
+
+    <!-- Upload Form -->
+    <form method="POST" enctype="multipart/form-data" style="background: white; border: 2px dashed #c7d2fe; border-radius: 12px; padding: 30px; text-align: center;">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 20px;">
+            <div style="width: 60px; height: 60px; background: #eef2ff; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-size: 28px;">
+                📤
+            </div>
+            <p style="margin: 0 0 4px 0; color: #1e293b; font-weight: bold; font-size: 15px;">Pilih File CSV</p>
+            <p style="margin: 0; color: #94a3b8; font-size: 13px;">Format .csv dengan encoding UTF-8</p>
+        </div>
+
+        <input type="file" name="csv_file" accept=".csv" required
+            style="margin-bottom: 20px; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+        
+        <br>
+        
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 12px;">
+            <a href="{% url 'admin:courses_quiz_change' quiz.pk %}" 
+               style="padding: 10px 24px; background: #f1f5f9; color: #475569; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                ← Batal
+            </a>
+            <button type="submit" 
+                style="padding: 10px 24px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+                📤 Upload & Import Soal
+            </button>
+        </div>
+    </form>
+
+    <!-- Download Template -->
+    <div style="text-align: center; margin-top: 16px;">
+        <a href="{% url 'admin:courses_quiz_download_template' %}" 
+           style="color: #6366f1; font-size: 13px; text-decoration: underline;">
+            📥 Download Template CSV Kosong
+        </a>
+    </div>
+</div>
+{% endblock %}

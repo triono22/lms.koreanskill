@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Pengumuman - 성문사이버학원{% endblock %}
+{% block page_title %}Pengumuman{% endblock %}
+
+{% block content %}
+<p class="text-gray-500 text-sm mb-6">Informasi dan pengumuman terbaru dari admin / pengajar</p>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-100">
+                <tr>
+                    <th scope="col" class="px-6 py-4 w-16 text-center">No</th>
+                    <th scope="col" class="px-6 py-4">Judul</th>
+                    <th scope="col" class="px-6 py-4 text-center">File / Link</th>
+                    <th scope="col" class="px-6 py-4 text-right">Waktu Terbit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in announcements %}
+                <tr class="bg-white border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 text-center font-semibold">
+                        {{ forloop.counter }}
+                    </td>
+                    <td class="px-6 py-4 font-bold text-gray-900">
+                        {{ item.title }}
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            {% if item.file %}
+                            <a href="{{ item.file.url }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors" title="Download File">
+                                <i class="fas fa-file-download"></i> File
+                            </a>
+                            {% endif %}
+                            
+                            {% if item.link %}
+                            <a href="{{ item.link }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-100 text-brand-700 hover:bg-brand-200 transition-colors" title="Buka Link">
+                                <i class="fas fa-external-link-alt"></i> Link
+                            </a>
+                            {% endif %}
+                            
+                            {% if not item.file and not item.link %}
+                            <span class="text-gray-400 text-xs">-</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                        {{ item.published_at|date:"d M Y, H:i" }} WIB
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-bullhorn text-gray-300 text-2xl"></i>
+                        </div>
+                        <p class="font-medium text-gray-600">Belum ada pengumuman</p>
+                        <p class="text-xs text-gray-400 mt-1">Pengumuman dari pengajar akan muncul di sini.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
