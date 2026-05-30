@@ -18,14 +18,11 @@ from attendance.models import LessonProgress
 
 
 def format_duration(seconds):
-    """Convert seconds to mm:ss format."""
+    """Convert seconds to Xm Ys format."""
     if seconds <= 0:
-        return "0:00"
+        return "0m 0s"
     m, s = divmod(int(seconds), 60)
-    h, m = divmod(m, 60)
-    if h > 0:
-        return f"{h}:{m:02d}:{s:02d}"
-    return f"{m}:{s:02d}"
+    return f"{m}m {s}s"
 
 
 # --- Template Views ---

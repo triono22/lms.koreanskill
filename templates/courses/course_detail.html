@@ -79,7 +79,7 @@
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-gray-700 truncate">{{ lesson.title }}</p>
                     <p class="text-xs text-gray-400">
-                        <i class="fas fa-clock mr-1"></i>{{ lesson.total_duration|default:0 }}s
+                        <i class="fas fa-clock mr-1"></i>{{ lesson.get_formatted_duration }}
                         {% if lesson.attachment %}<span class="ml-2"><i class="fas fa-paperclip mr-1"></i>Dokumen</span>{% endif %}
                     </p>
                 </div>

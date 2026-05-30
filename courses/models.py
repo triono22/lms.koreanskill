@@ -81,6 +81,13 @@ class Lesson(models.Model):
     def __str__(self):
         return f"{self.order}. {self.title}"
 
+    @property
+    def get_formatted_duration(self):
+        if not self.total_duration:
+            return "0m 0s"
+        minutes, seconds = divmod(self.total_duration, 60)
+        return f"{minutes}m {seconds}s"
+
 
 class Enrollment(models.Model):
     """Links a student to a course."""

@@ -30,7 +30,7 @@
             
             <div class="mt-4 pt-4 border-t border-gray-100">
                 <div class="flex items-center gap-4 text-sm text-gray-500">
-                    <span><i class="fas fa-clock mr-1.5 text-brand-400"></i> {{ lesson.total_duration }} detik</span>
+                    <span><i class="fas fa-clock mr-1.5 text-brand-400"></i> {{ lesson.get_formatted_duration }}</span>
                     {% if current_progress %}
                     <span class="{% if current_progress.is_completed %}text-green-600{% else %}text-amber-600{% endif %}">
                         <i class="fas {% if current_progress.is_completed %}fa-check-circle{% else %}fa-spinner{% endif %} mr-1.5"></i>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-semibold truncate {% if item.id == lesson.id %}text-brand-700{% else %}text-gray-700{% endif %}">{{ item.title }}</p>
-                            <p class="text-[11px] text-gray-400">{{ item.total_duration }}s</p>
+                            <p class="text-[11px] text-gray-400">{{ item.get_formatted_duration }}</p>
                         </div>
                         {% if item.id == lesson.id %}
                         <i class="fas fa-play text-brand-600 text-[10px]"></i>
