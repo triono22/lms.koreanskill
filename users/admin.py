@@ -21,3 +21,12 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('first_name', 'last_name', 'tanggal_lahir', 'role'),
         }),
     )
+
+    actions = ["reset_password_default"]
+
+    @admin.action(description="Reset password menjadi '12345678'")
+    def reset_password_default(self, request, queryset):
+        for user in queryset:
+            user.set_password('12345678')
+            user.save()
+        self.message_user(request, f"Berhasil mereset password {queryset.count()} user menjadi '12345678'.")
