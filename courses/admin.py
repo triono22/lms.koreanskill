@@ -46,10 +46,18 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ("title", "course", "order", "total_duration", "video_url", "attachment")
+    list_display = ("title", "course", "order", "formatted_duration", "video_url", "attachment")
     list_filter = ("course",)
     search_fields = ("title",)
     ordering = ("course", "order")
+
+    def formatted_duration(self, obj):
+        if not obj.total_duration:
+            return "0m 0s"
+        minutes, seconds = divmod(obj.total_duration, 60)
+        return f"{minutes}m {seconds}s"
+    formatted_duration.short_description = "Durasi Total"
+    formatted_duration.admin_order_field = "total_duration"
 
 
 @admin.register(Enrollment)
