@@ -5,10 +5,17 @@ from .models import LessonProgress
 
 @admin.register(LessonProgress)
 class LessonProgressAdmin(admin.ModelAdmin):
-    list_display = ("student", "lesson", "watched_duration", "is_completed", "progress_display", "last_watched_at")
+    list_display = ("student", "lesson", "formatted_watched_duration", "is_completed", "progress_display", "last_watched_at")
     list_filter = ("is_completed", "lesson__course")
     search_fields = ("student__username", "lesson__title")
     readonly_fields = ("progress_display",)
+
+    @admin.display(description="Durasi Ditonton", ordering="watched_duration")
+    def formatted_watched_duration(self, obj):
+        if not obj.watched_duration:
+            return "0m 0s"
+        minutes, seconds = divmod(obj.watched_duration, 60)
+        return f"{minutes}m {seconds}s"
 
     @admin.display(description="Progress (%)")
     def progress_display(self, obj):
