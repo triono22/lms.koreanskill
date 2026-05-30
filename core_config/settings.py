@@ -181,6 +181,13 @@ SIMPLE_JWT = {
 }
 
 # Security Settings (enabled in production)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = [
+    'https://lms.koreanskill.com',
+    'https://*.pythonanywhere.com',
+    'https://koreanskill.pythonanywhere.com',
+]
+
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -188,11 +195,7 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
     SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    CSRF_TRUSTED_ORIGINS = [
-        'https://lms.koreanskill.com',
-        'https://*.pythonanywhere.com',
-    ]
+
 
 # File upload limits
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB
