@@ -71,6 +71,13 @@ class Lesson(models.Model):
         verbose_name="Lampiran Dokumen",
         help_text="File dokumen pendukung (PDF, Docx, dll.)",
     )
+    attachment_url = models.URLField(
+        max_length=500,
+        blank=True,
+        null=True,
+        verbose_name="Link/URL Dokumen",
+        help_text="Tautan eksternal (Google Drive, dll.) untuk dokumen materi.",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -41,8 +41,8 @@
             </div>
             
             <!-- Document Download -->
-            {% if lesson.attachment %}
-            <div class="mt-5 p-4 bg-brand-50 border border-brand-100 rounded-xl flex items-center justify-between">
+            {% if lesson.attachment or lesson.attachment_url %}
+            <div class="mt-5 p-4 bg-brand-50 border border-brand-100 rounded-xl flex items-center justify-between flex-wrap gap-4">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-brand-600 text-white rounded-lg flex items-center justify-center shadow-sm">
                         <i class="fas fa-file-pdf"></i>
@@ -52,9 +52,18 @@
                         <p class="text-xs text-gray-500">File pendukung untuk materi ini</p>
                     </div>
                 </div>
-                <a href="{{ lesson.attachment.url }}" download class="bg-white text-brand-600 px-4 py-2 rounded-lg text-sm font-bold border border-brand-200 hover:bg-brand-600 hover:text-white transition-all shadow-sm">
-                    <i class="fas fa-download mr-1.5"></i> Download
-                </a>
+                <div class="flex gap-2">
+                    {% if lesson.attachment %}
+                    <a href="{{ lesson.attachment.url }}" download class="bg-white text-brand-600 px-4 py-2 rounded-lg text-sm font-bold border border-brand-200 hover:bg-brand-600 hover:text-white transition-all shadow-sm flex items-center">
+                        <i class="fas fa-download mr-1.5"></i> Download
+                    </a>
+                    {% endif %}
+                    {% if lesson.attachment_url %}
+                    <a href="{{ lesson.attachment_url }}" target="_blank" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-bold border border-brand-600 hover:bg-brand-700 hover:border-brand-700 transition-all shadow-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1.5"></i> Buka Link
+                    </a>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
         </div>

@@ -24,7 +24,7 @@ class LessonInline(admin.TabularInline):
     """Inline editor for lessons inside a course."""
     model = Lesson
     extra = 1
-    fields = ("order", "title", "video_url", "video_file", "attachment", "total_duration")
+    fields = ("order", "title", "video_url", "video_file", "attachment", "attachment_url", "total_duration")
     ordering = ("order",)
 
 
